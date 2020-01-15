@@ -37,6 +37,24 @@ public struct Printer {
         }
         return output
     }()
+    
+    /// Convenience interface that calls through to Swift's `dump(_:to:name:indent:maxDepth:maxItems:)` method using `output` as the target stream.
+    public static func dump<T>(
+        _ value: T,
+        name: String? = nil,
+        indent: Int = 0, 
+        maxDepth: Int = .max, 
+        maxItems: Int = .max
+    ) -> T {
+        Swift.dump(
+            value, 
+            to: &output, 
+            name: name, 
+            indent: indent, 
+            maxDepth: maxDepth, 
+            maxItems: maxItems
+        )
+    }
 
     /// Similar to `Swift.print(...:separator:terminator:)`, this method will print the items out to the internal stream logger.
     public static func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
