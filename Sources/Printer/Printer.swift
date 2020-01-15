@@ -17,9 +17,9 @@ public struct Printer {
     }
 
     /// A logger that prints to the open socket stream.
-    public static var streamLogger: StreamLogger = {
-        let logger = StreamLogger()
-        logger.taskProvider = {
+    public static var output: SocketOutput = {
+        let output = SocketOutput()
+        output.taskProvider = {
             if let task = task { return task }
 
             var components = URLComponents()
@@ -35,7 +35,7 @@ public struct Printer {
             task = newTask
             return newTask
         }
-        return logger
+        return output
     }()
 
     /// Similar to `Swift.print(...:separator:terminator:)`, this method will print the items out to the internal stream logger.
@@ -52,17 +52,17 @@ public struct Printer {
 
     private static func _print(_ items: [Any], separator: String, terminator: String, using decorator: (Any) -> String) {
         // Be sure to lock the logger for thread safety
-        streamLogger._lock()
-        defer { streamLogger._unlock() }
+        output._lock()
+        defer { output._unlock() }
 
         // Coping the stlib core, loop teh items and write them to the logger
         var prefix = ""
         for item in items {
-            prefix.write(to: &streamLogger)
-            decorator(item).write(to: &streamLogger)
+            prefix.write(to: &output)
+            decorator(item).write(to: &output)
             prefix = separator
         }
-        terminator.write(to: &streamLogger)
+        terminator.write(to: &output)
     }
 
     /// The session used for creating web socket connections.

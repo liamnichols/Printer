@@ -1,7 +1,7 @@
 import Foundation
 
 @available(iOS 13.0, *)
-public class StreamLogger: TextOutputStream {
+public class SocketOutput: TextOutputStream {
     internal var taskProvider: (() -> URLSessionWebSocketTask?)?
 
     public func write(_ string: String) {
